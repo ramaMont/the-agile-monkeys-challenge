@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: backend
+  ai:
+    mcp:
+      server:
+        name: secure-actions-gateway
+        version: 0.0.1
+        protocol: STREAMABLE
+        type: SYNC
