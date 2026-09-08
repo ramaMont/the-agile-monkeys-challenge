@@ -1,0 +1,8 @@
+target
+.git
+.idea
+*.iml
+README.md
+compose.yml
+.env
+.env.example

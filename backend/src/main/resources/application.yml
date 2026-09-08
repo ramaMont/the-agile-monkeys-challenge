@@ -1,9 +1,17 @@
 server:
   port: 8080
 
+app:
+  cors:
+    allowed-origin: ${CORS_ALLOWED_ORIGIN}
+
 spring:
   application:
-    name: backend
+    name: secure-actions-gateway
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   ai:
     mcp:
       server:
