@@ -1,6 +1,7 @@
 import { env } from '../config/env'
+import type { ReservationProposal } from '../types/reservationProposal'
 
-export async function fetchReservationProposals(): Promise<unknown[]> {
+export async function fetchReservationProposals(): Promise<ReservationProposal[]> {
   const response = await fetch(`${env.apiBaseUrl}/v1/reservation-proposals`)
   if (!response.ok) {
     throw new Error(`Reservation proposals request failed: ${response.status}`)
