@@ -1,6 +1,9 @@
 package com.aifindr.gateway.reservationProposals;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,5 +22,12 @@ public class ReservationProposalController {
 	@GetMapping
 	public List<ReservationProposalResponse> list() {
 		return proposals.list();
+	}
+
+	@PatchMapping("/{id}")
+	public ReservationProposalResponse update(
+			@PathVariable String id,
+			@RequestBody ReservationProposalUpdateRequest request) {
+		return proposals.updateStatus(id, request.status());
 	}
 }

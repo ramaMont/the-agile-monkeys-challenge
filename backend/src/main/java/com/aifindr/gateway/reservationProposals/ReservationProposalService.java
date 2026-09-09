@@ -1,8 +1,10 @@
 package com.aifindr.gateway.reservationProposals;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,5 +35,21 @@ public class ReservationProposalService {
 				.stream()
 				.map(ReservationProposal::toResponse)
 				.toList();
+	}
+
+	@Transactional
+	public ReservationProposalResponse updateStatus(String id, ReservationProposalStatus status) {
+		ReservationProposal proposal = proposals.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		try {
+			proposal.applyStatus(status);
+		}
+		catch (IllegalStateException ex) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
+		}
+		catch (IllegalArgumentException ex) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+		}
+		return proposals.save(proposal).toResponse();
 	}
 }

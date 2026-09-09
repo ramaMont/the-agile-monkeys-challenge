@@ -42,6 +42,16 @@ public class ReservationProposal {
 		return proposal;
 	}
 
+	void applyStatus(ReservationProposalStatus next) {
+		if (status != ReservationProposalStatus.PENDING) {
+			throw new IllegalStateException("Reservation proposal is not PENDING");
+		}
+		if (next != ReservationProposalStatus.APPROVED && next != ReservationProposalStatus.REJECTED) {
+			throw new IllegalArgumentException("Status must be APPROVED or REJECTED");
+		}
+		this.status = next;
+	}
+
 	ReservationProposalResponse toResponse() {
 		return new ReservationProposalResponse(
 				id,
