@@ -37,6 +37,13 @@ public class ReservationProposalService {
 				.toList();
 	}
 
+	@Transactional(readOnly = true)
+	public ReservationProposalResponse get(String id) {
+		return proposals.findById(id)
+				.map(ReservationProposal::toResponse)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+	}
+
 	@Transactional
 	public ReservationProposalResponse updateStatus(String id, ReservationProposalStatus status) {
 		ReservationProposal proposal = proposals.findById(id)

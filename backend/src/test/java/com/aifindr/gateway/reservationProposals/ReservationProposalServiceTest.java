@@ -115,4 +115,29 @@ class ReservationProposalServiceTest {
 		);
 		assertEquals(BAD_REQUEST, ex.getStatusCode());
 	}
+
+	@Test
+	void getReturnsPendingProposal() {
+		ReservationProposalResponse created = proposals.propose(
+				"Ada Lovelace",
+				"Madrid Centro",
+				"Mortgage advice",
+				"2026-09-20T10:00"
+		);
+
+		ReservationProposalResponse found = proposals.get(created.id());
+
+		assertEquals(created.id(), found.id());
+		assertEquals(ReservationProposalStatus.PENDING, found.status());
+		assertEquals(created, found);
+	}
+
+	@Test
+	void getNotFoundForUnknownId() {
+		ResponseStatusException ex = assertThrows(
+				ResponseStatusException.class,
+				() -> proposals.get("missing")
+		);
+		assertEquals(NOT_FOUND, ex.getStatusCode());
+	}
 }
