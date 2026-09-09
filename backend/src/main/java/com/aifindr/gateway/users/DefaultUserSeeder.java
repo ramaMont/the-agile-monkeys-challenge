@@ -17,8 +17,8 @@ public class DefaultUserSeeder implements ApplicationRunner {
 	public DefaultUserSeeder(
 			AppUserRepository users,
 			PasswordEncoder passwordEncoder,
-			@Value("${spring.security.user.name:user}") String username,
-			@Value("${spring.security.user.password:password}") String rawPassword) {
+			@Value("${app.admin.username:user}") String username,
+			@Value("${app.admin.password:password}") String rawPassword) {
 		this.users = users;
 		this.passwordEncoder = passwordEncoder;
 		this.username = username;
