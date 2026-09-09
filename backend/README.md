@@ -40,8 +40,15 @@ backend/
 - Postgres via `SPRING_DATASOURCE_*` (required; Compose sets these)
 - CORS via `CORS_ALLOWED_ORIGIN` (required; no localhost default in main config)
 - MCP endpoint: `http://localhost:8080/mcp`
+- Stable JWT signing: set `OAUTH_RSA_PRIVATE_KEY` (PKCS#8 PEM) and optional `OAUTH_JWK_KEY_ID` (default `gateway-1`). Without the PEM, a new RSA key is generated every process start and existing tokens die. On Render, store the PEM as a secret (newlines as `\n` is fine).
 
-The HTTP MCP endpoint is unauthenticated at this stage. That is acceptable on localhost. Before a public tunnel, add auth so credentials never sit in the frontend.
+Generate a local key:
+
+```bash
+openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out private.pem
+```
+
+The HTTP MCP endpoint requires OAuth Bearer tokens (Authorization Server + resource server). SPA login uses the same signing key via `POST /v1/auth/login`.
 
 ## Prerequisites
 
