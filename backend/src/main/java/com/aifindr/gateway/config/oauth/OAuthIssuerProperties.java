@@ -10,7 +10,7 @@ public record OAuthIssuerProperties(String issuerUrl, String clientId, String cl
 		clientSecret = blankToDefault(clientSecret, "aifindr-dev-secret");
 	}
 
-	String canonicalIssuerUrl() {
+	public String canonicalIssuerUrl() {
 		String issuer = issuerUrl == null ? "" : issuerUrl.strip();
 		if (issuer.endsWith("/")) {
 			return issuer.substring(0, issuer.length() - 1);

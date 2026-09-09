@@ -27,9 +27,9 @@ class McpOAuthSecurityTest {
 	}
 
 	@Test
-	void reservationProposalsStayPublic() throws Exception {
+	void reservationProposalsRequireAuth() throws Exception {
 		mockMvc.perform(get("/v1/reservation-proposals"))
-				.andExpect(status().isOk());
+				.andExpect(status().isUnauthorized());
 	}
 
 	@Test
