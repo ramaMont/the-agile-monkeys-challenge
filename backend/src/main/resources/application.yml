@@ -4,6 +4,9 @@ server:
 app:
   cors:
     allowed-origin: ${CORS_ALLOWED_ORIGIN}
+  admin:
+    username: ${ADMIN_OAUTH_USER:user}
+    password: ${ADMIN_OAUTH_PASSWORD:password}
   oauth:
     issuer-url: ${APP_BASE_URL:http://localhost:8080}
     client-id: ${OAUTH_CLIENT_ID:aifindr}
