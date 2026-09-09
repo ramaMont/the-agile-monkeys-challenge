@@ -7,5 +7,6 @@ export function useReservationProposals() {
   return useQuery({
     queryKey: reservationProposalsQueryKey,
     queryFn: fetchReservationProposals,
+    refetchInterval: 5_000,
   })
 }
