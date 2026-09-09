@@ -1,22 +1,22 @@
-import { useReservations } from '../hooks/useReservations'
+import { useReservationProposals } from '../hooks/useReservationProposals'
 
-export function ReservationList() {
-  const { data: items, isPending, isError } = useReservations()
+export function ReservationProposalList() {
+  const { data: items, isPending, isError } = useReservationProposals()
 
   if (isError) {
     return (
       <p role="alert" className="text-amber-700 dark:text-amber-400">
-        Could not load reservations from the backend.
+        Could not load reservation proposals from the backend.
       </p>
     )
   }
 
   if (isPending) {
-    return <p className="text-zinc-500 dark:text-zinc-400">Loading reservations…</p>
+    return <p className="text-zinc-500 dark:text-zinc-400">Loading reservation proposals…</p>
   }
 
   if (items.length === 0) {
-    return <p className="text-zinc-500 dark:text-zinc-400">No reservations yet.</p>
+    return <p className="text-zinc-500 dark:text-zinc-400">No reservation proposals yet.</p>
   }
 
   return (
