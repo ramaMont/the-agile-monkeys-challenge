@@ -8,6 +8,8 @@ app:
     issuer-url: ${APP_BASE_URL:http://localhost:8080}
     client-id: ${OAUTH_CLIENT_ID:aifindr}
     client-secret: ${OAUTH_CLIENT_SECRET:aifindr-dev-secret}
+    rsa-private-key: ${OAUTH_RSA_PRIVATE_KEY:}
+    jwk-key-id: ${OAUTH_JWK_KEY_ID:gateway-1}
 
 spring:
   application:

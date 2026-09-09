@@ -29,6 +29,8 @@ services:
       MCP_OAUTH_PASSWORD: ${MCP_OAUTH_PASSWORD:-password}
       OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID:-aifindr}
       OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET:-aifindr-dev-secret}
+      OAUTH_RSA_PRIVATE_KEY: ${OAUTH_RSA_PRIVATE_KEY:-}
+      OAUTH_JWK_KEY_ID: ${OAUTH_JWK_KEY_ID:-gateway-1}
     depends_on:
       db:
         condition: service_healthy
