@@ -9,8 +9,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 
 import java.security.KeyPair;
@@ -33,6 +35,11 @@ public class JwkConfig {
 		NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSource(jwkSource).build();
 		decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(oauth.canonicalIssuerUrl()));
 		return decoder;
+	}
+
+	@Bean
+	JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwkSource) {
+		return new NimbusJwtEncoder(jwkSource);
 	}
 
 	@Bean
