@@ -84,6 +84,7 @@ public class SecurityConfig {
 		return http.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/health", "/v1/**", "/error").permitAll()
 						.anyRequest().authenticated())
+				.csrf(csrf -> csrf.ignoringRequestMatchers("/health", "/v1/**", "/error"))
 				.userDetailsService(users)
 				.formLogin(withDefaults())
 				.build();

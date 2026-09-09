@@ -1,4 +1,5 @@
 import type { ReservationProposal } from '../types/reservationProposal'
+import { ProposalDecisionButtons } from './ProposalDecisionButtons'
 import { ProposalStatusBadge } from './ProposalStatusBadge'
 
 type Props = {
@@ -7,6 +8,7 @@ type Props = {
 
 export function ReservationProposalCard({ proposal }: Props) {
   const shortId = proposal.id.slice(0, 8)
+  const isPending = proposal.status === 'PENDING'
 
   return (
     <article className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -31,6 +33,8 @@ export function ReservationProposalCard({ proposal }: Props) {
           <dd className="text-zinc-800 dark:text-zinc-200">{proposal.dateTime}</dd>
         </div>
       </dl>
+
+      {isPending ? <ProposalDecisionButtons proposalId={proposal.id} /> : null}
 
       <footer className="mt-4 border-t border-zinc-100 pt-3 text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
         {shortId}…

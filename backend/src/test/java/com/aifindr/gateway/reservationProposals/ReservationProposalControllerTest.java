@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,5 +33,33 @@ class ReservationProposalControllerTest {
 		mockMvc.perform(get("/v1/reservation-proposals"))
 				.andExpect(status().isOk())
 				.andExpect(content().json("[]"));
+	}
+
+	@Test
+	void patchUpdatesStatus() throws Exception {
+		when(proposals.updateStatus("abc", ReservationProposalStatus.APPROVED))
+				.thenReturn(new ReservationProposalResponse(
+						"abc",
+						ReservationProposalStatus.APPROVED,
+						"Ada Lovelace",
+						"Madrid Centro",
+						"Mortgage advice",
+						"2026-09-20T10:00"
+				));
+
+		mockMvc.perform(patch("/v1/reservation-proposals/abc")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"status\":\"APPROVED\"}"))
+				.andExpect(status().isOk())
+				.andExpect(content().json("""
+						{
+						  "id": "abc",
+						  "status": "APPROVED",
+						  "customerName": "Ada Lovelace",
+						  "branch": "Madrid Centro",
+						  "purpose": "Mortgage advice",
+						  "dateTime": "2026-09-20T10:00"
+						}
+						"""));
 	}
 }
