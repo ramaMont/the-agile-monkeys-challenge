@@ -4,7 +4,7 @@ import { ReservationProposalCard } from './ReservationProposalCard'
 export function ReservationProposalList() {
   const { data: items, isPending, isError } = useReservationProposals()
 
-  if (isError) {
+  if (isError && !items) {
     return (
       <div
         role="alert"
