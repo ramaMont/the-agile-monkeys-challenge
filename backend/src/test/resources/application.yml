@@ -4,7 +4,13 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
 
 app:
   cors:
     allowed-origin: http://localhost:5173
+  oauth:
+    issuer-url: http://localhost:8080

@@ -24,6 +24,11 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-gateway}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-gateway}
       CORS_ALLOWED_ORIGIN: ${CORS_ALLOWED_ORIGIN:-http://localhost:5173}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8080}
+      MCP_OAUTH_USER: ${MCP_OAUTH_USER:-user}
+      MCP_OAUTH_PASSWORD: ${MCP_OAUTH_PASSWORD:-password}
+      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID:-aifindr}
+      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET:-aifindr-dev-secret}
     depends_on:
       db:
         condition: service_healthy

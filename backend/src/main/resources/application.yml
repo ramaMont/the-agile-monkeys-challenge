@@ -4,14 +4,26 @@ server:
 app:
   cors:
     allowed-origin: ${CORS_ALLOWED_ORIGIN}
+  oauth:
+    issuer-url: ${APP_BASE_URL:http://localhost:8080}
+    client-id: ${OAUTH_CLIENT_ID:aifindr}
+    client-secret: ${OAUTH_CLIENT_SECRET:aifindr-dev-secret}
 
 spring:
   application:
     name: secure-actions-gateway
+  security:
+    user:
+      name: ${MCP_OAUTH_USER:user}
+      password: ${MCP_OAUTH_PASSWORD:password}
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
   ai:
     mcp:
       server:
@@ -19,3 +31,5 @@ spring:
         version: 0.0.1
         protocol: STREAMABLE
         type: SYNC
+        streamable-http:
+          keep-alive-interval: 1s

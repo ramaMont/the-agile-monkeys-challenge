@@ -27,7 +27,7 @@ backend/
 └── src/main/java/com/aifindr/gateway/
     ├── GatewayApplication.java
     ├── config/          # CORS and other cross-cutting setup
-    └── reservations/   # REST + service for this resource
+    └── reservationProposals/   # REST + service for this resource
 ```
 
 ## Configuration
@@ -74,7 +74,7 @@ Tests (H2 in-memory, no Docker):
 
 `GET /` returns **404**. There is no home page yet; a 404 still means Tomcat is up.
 
-`GET /v1/actions/reservations` returns `[]`. The React app uses this to show an empty list.
+`GET /v1/reservation-proposals` returns `[]`. The React app uses this to show an empty list.
 
 Confirm MCP with an initialize call:
 
