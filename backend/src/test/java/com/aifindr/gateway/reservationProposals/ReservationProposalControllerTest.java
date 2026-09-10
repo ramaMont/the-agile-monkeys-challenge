@@ -27,12 +27,26 @@ class ReservationProposalControllerTest {
 	private ReservationProposalService proposals;
 
 	@Test
-	void listReturnsEmptyArray() throws Exception {
-		when(proposals.list()).thenReturn(List.of());
+	void listReturnsEmptyPage() throws Exception {
+		when(proposals.list(0, 10)).thenReturn(new ReservationProposalPageResponse(
+				List.of(),
+				0,
+				10,
+				0,
+				0
+		));
 
 		mockMvc.perform(get("/v1/reservation-proposals"))
 				.andExpect(status().isOk())
-				.andExpect(content().json("[]"));
+				.andExpect(content().json("""
+						{
+						  "content": [],
+						  "page": 0,
+						  "size": 10,
+						  "totalElements": 0,
+						  "totalPages": 0
+						}
+						"""));
 	}
 
 	@Test

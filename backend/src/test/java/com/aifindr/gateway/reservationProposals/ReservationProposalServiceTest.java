@@ -35,8 +35,10 @@ class ReservationProposalServiceTest {
 		assertEquals("Mortgage advice", created.purpose());
 		assertEquals("2026-09-20T10:00", created.dateTime());
 		assertFalse(created.id().isBlank());
-		assertEquals(1, proposals.list().size());
-		assertEquals(created, proposals.list().get(0));
+		ReservationProposalPageResponse page = proposals.list(0, 10);
+		assertEquals(1, page.content().size());
+		assertEquals(created, page.content().get(0));
+		assertEquals(1, page.totalElements());
 	}
 
 	@Test

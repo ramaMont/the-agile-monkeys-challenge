@@ -5,9 +5,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/reservation-proposals")
@@ -20,8 +19,10 @@ public class ReservationProposalController {
 	}
 
 	@GetMapping
-	public List<ReservationProposalResponse> list() {
-		return proposals.list();
+	public ReservationProposalPageResponse list(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		return proposals.list(page, size);
 	}
 
 	@PatchMapping("/{id}")
