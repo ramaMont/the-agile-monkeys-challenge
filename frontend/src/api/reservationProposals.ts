@@ -30,6 +30,20 @@ export type ReservationProposalStatusUpdate = {
   status: 'APPROVED' | 'REJECTED'
 }
 
+export class ProposalUpdateError extends Error {
+  readonly status: number
+
+  constructor(status: number) {
+    super(
+      status === 409
+        ? 'This proposal was already decided.'
+        : `Reservation proposal update failed: ${status}`,
+    )
+    this.name = 'ProposalUpdateError'
+    this.status = status
+  }
+}
+
 export async function updateReservationProposal(
   id: string,
   update: ReservationProposalStatusUpdate,
@@ -40,7 +54,7 @@ export async function updateReservationProposal(
     body: JSON.stringify(update),
   })
   if (!response.ok) {
-    throw new Error(`Reservation proposal update failed: ${response.status}`)
+    throw new ProposalUpdateError(response.status)
   }
   return response.json()
 }
