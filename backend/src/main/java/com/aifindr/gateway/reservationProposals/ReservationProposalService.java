@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.function.Supplier;
+
 @Service
 public class ReservationProposalService {
 
@@ -23,14 +25,18 @@ public class ReservationProposalService {
 			String branch,
 			String purpose,
 			String dateTime) {
+		ReservationProposalValidator.NormalizedProposal input = requireValid(
+				() -> ReservationProposalValidator.requireProposal(customerName, branch, purpose, dateTime)
+		);
 		ReservationProposal saved = proposals.save(
-				ReservationProposal.pending(customerName, branch, purpose, dateTime)
+				ReservationProposal.pending(input.customerName(), input.branch(), input.purpose(), input.dateTime())
 		);
 		return saved.toResponse();
 	}
 
 	@Transactional(readOnly = true)
 	public ReservationProposalPageResponse list(int page, int size) {
+		requireValid(() -> ReservationProposalValidator.requirePage(page, size));
 		Page<ReservationProposal> result = proposals.findAll(
 				PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))
 		);
@@ -64,5 +70,21 @@ public class ReservationProposalService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
 		}
 		return proposals.save(proposal).toResponse();
+	}
+
+	private static void requireValid(Runnable check) {
+		requireValid(() -> {
+			check.run();
+			return null;
+		});
+	}
+
+	private static <T> T requireValid(Supplier<T> check) {
+		try {
+			return check.get();
+		}
+		catch (IllegalArgumentException ex) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+		}
 	}
 }

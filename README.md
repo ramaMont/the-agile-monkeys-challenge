@@ -12,7 +12,7 @@ The solution lets the Bank Assistant agent **register** a simulated appointment 
 | MCP endpoint for AIFindr | `https://secure-actions-gateway.onrender.com/mcp`                                          |
 
 
-Local setup, environment variables, and deployment: [backend/README.md](backend/README.md) and [frontend/README.md](frontend/README.md). The backend test suite is run with `cd backend && ./mvnw test`.
+Local setup, environment variables, and deployment: [backend/README.md](backend/README.md) and [frontend/README.md](frontend/README.md).
 
 ---
 
@@ -142,9 +142,34 @@ This delivery does not include:
 - Isolation between customers, branches, or reviewers.
 - Retries and reconciliation with an external system (no such system exists).
 - Rate limiting, WAF, captcha, or second-factor authentication.
-- E2E tests of the frontend and of the AIFindr conversation. The contract is verified with HTTP, OAuth, and state tests in the backend; the demonstration of the agent flow is presented separately.
+- E2E tests of the frontend and of the AIFindr conversation. The demonstration of the agent flow is presented separately.
 
-Non-trivial cases covered by tests: illegal state transition (`409` if the proposal is not `PENDING`); access to `/mcp` without a Bearer token (`401` and challenge); token exchange with a `{noop}` secret against a BCrypt encoder; redirect allowlist (rejection of foreign hosts and of `http` to aifindr); rejection of invalid credentials on SPA login.
+---
+
+## How the behaviour is verified
+
+The measurement for this delivery is the backend suite plus the deployed happy path. From the repo root:
+
+```bash
+cd backend && ./mvnw test
+```
+
+| Case | What it shows |
+| ---- | ------------- |
+| Approve or reject a proposal that is no longer `PENDING` | Illegal transition → `409` |
+| Blank field, `dateTime` `not-a-date`, or an oversized string on propose | Deterministic rejection → `400` |
+| `POST /mcp` without a Bearer token | `401` and a `WWW-Authenticate` challenge |
+| Token endpoint with a wrong client secret | `401`; a valid `{noop}` secret with a bad code → `400` |
+| Redirect URI on a foreign host or `http` to aifindr | Allowlist rejection |
+| SPA login with invalid credentials | `401` |
+
+Live URLs (happy path, HTTPS):
+
+- Gateway (MCP + API): [https://secure-actions-gateway.onrender.com](https://secure-actions-gateway.onrender.com)
+- Review UI: [https://gateway-ui.onrender.com](https://gateway-ui.onrender.com)
+- MCP endpoint: `https://secure-actions-gateway.onrender.com/mcp`
+
+There is no latency or cost benchmark. The objective evidence is the state machine, the auth boundaries, and that the public HTTPS integration stays reachable.
 
 ---
 
