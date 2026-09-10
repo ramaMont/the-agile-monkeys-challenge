@@ -1,12 +1,12 @@
 package com.aifindr.gateway.reservationProposals;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Service
 public class ReservationProposalService {
@@ -30,11 +30,17 @@ public class ReservationProposalService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ReservationProposalResponse> list() {
-		return proposals.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
-				.stream()
-				.map(ReservationProposal::toResponse)
-				.toList();
+	public ReservationProposalPageResponse list(int page, int size) {
+		Page<ReservationProposal> result = proposals.findAll(
+				PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))
+		);
+		return new ReservationProposalPageResponse(
+				result.map(ReservationProposal::toResponse).getContent(),
+				result.getNumber(),
+				result.getSize(),
+				result.getTotalElements(),
+				result.getTotalPages()
+		);
 	}
 
 	@Transactional(readOnly = true)

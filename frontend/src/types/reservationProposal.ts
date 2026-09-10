@@ -8,3 +8,11 @@ export type ReservationProposal = {
   purpose: string
   dateTime: string
 }
+
+export type ReservationProposalPage = {
+  content: ReservationProposal[]
+  page: number
+  size: number
+  totalElements: number
+  totalPages: number
+}

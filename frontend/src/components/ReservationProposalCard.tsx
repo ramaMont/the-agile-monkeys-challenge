@@ -7,7 +7,6 @@ type Props = {
 }
 
 export function ReservationProposalCard({ proposal }: Props) {
-  const shortId = proposal.id.slice(0, 8)
   const isPending = proposal.status === 'PENDING'
 
   return (
@@ -37,7 +36,7 @@ export function ReservationProposalCard({ proposal }: Props) {
       {isPending ? <ProposalDecisionButtons proposalId={proposal.id} /> : null}
 
       <footer className="mt-4 border-t border-zinc-100 pt-3 text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
-        {shortId}…
+        {proposal.id}
       </footer>
     </article>
   )
