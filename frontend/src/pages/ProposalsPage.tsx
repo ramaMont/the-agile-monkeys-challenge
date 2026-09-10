@@ -16,10 +16,10 @@ export function ProposalsPage() {
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-medium tracking-tight text-zinc-900 dark:text-zinc-50">
-            Reservation proposals
+            Proposal review
           </h1>
           <p className="mt-2 text-zinc-500 dark:text-zinc-400">
-            Actions waiting for review from the MCP gateway.
+            Review and confirm reservation actions proposed by the MCP gateway.
           </p>
         </div>
         <button

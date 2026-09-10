@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  ProposalUpdateError,
   updateReservationProposal,
   type ReservationProposalStatusUpdate,
 } from '../api/reservationProposals'
@@ -18,6 +19,11 @@ export function useUpdateReservationProposal() {
       updateReservationProposal(id, { status }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: reservationProposalsQueryKey })
+    },
+    onError: async (error) => {
+      if (error instanceof ProposalUpdateError && error.status === 409) {
+        await queryClient.invalidateQueries({ queryKey: reservationProposalsQueryKey })
+      }
     },
   })
 }

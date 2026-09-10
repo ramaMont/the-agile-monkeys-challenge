@@ -1,4 +1,5 @@
 import type { ReservationProposal } from '../types/reservationProposal'
+import { formatProposalDateTime } from '../lib/formatProposalDateTime'
 import { ProposalDecisionButtons } from './ProposalDecisionButtons'
 import { ProposalStatusBadge } from './ProposalStatusBadge'
 
@@ -29,7 +30,9 @@ export function ReservationProposalCard({ proposal }: Props) {
         </div>
         <div>
           <dt className="text-zinc-500 dark:text-zinc-400">Date & time</dt>
-          <dd className="text-zinc-800 dark:text-zinc-200">{proposal.dateTime}</dd>
+          <dd className="text-zinc-800 dark:text-zinc-200">
+            {formatProposalDateTime(proposal.dateTime)}
+          </dd>
         </div>
       </dl>
 

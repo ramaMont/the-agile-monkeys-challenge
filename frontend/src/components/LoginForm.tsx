@@ -31,7 +31,7 @@ export function LoginForm() {
     >
       <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">Sign in</h2>
       <p className="mt-1 mb-5 text-sm text-zinc-500 dark:text-zinc-400">
-        Use your gateway credentials to review proposals.
+        Sign in as a reviewer to approve or reject pending proposals.
       </p>
 
       <label className="block text-sm text-zinc-600 dark:text-zinc-300">

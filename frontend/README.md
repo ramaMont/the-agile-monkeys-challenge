@@ -2,6 +2,8 @@
 
 React + Vite UI for reviewing reservation proposals against the MCP gateway.
 
+The SPA is the **operator console**: sign in with the gateway admin JWT, browse the paginated proposal list, and **Approve** or **Reject** pending items after an explicit confirm step. Status refreshes every 15s. Domain and adversarial tests live in `../backend` (`./mvnw test`); this UI has no separate test suite.
+
 ## Local setup
 
 1. Use Node.js **22.23.2** (see `.nvmrc`). Vite needs Node 20.19+ or 22.12+.

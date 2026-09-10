@@ -4,7 +4,7 @@ import { ReservationProposalCard } from './ReservationProposalCard'
 
 export function ReservationProposalList() {
   const [page, setPage] = useState(0)
-  const { data, isPending, isError } = useReservationProposals(page)
+  const { data, isPending, isError, refetch, isFetching } = useReservationProposals(page)
 
   if (isError && !data) {
     return (
@@ -12,7 +12,15 @@ export function ReservationProposalList() {
         role="alert"
         className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300"
       >
-        Could not load reservation proposals from the backend.
+        <p>Could not load reservation proposals from the backend.</p>
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          disabled={isFetching}
+          className="mt-3 rounded-lg border border-amber-300 px-3 py-1.5 text-sm font-medium disabled:opacity-50 dark:border-amber-800"
+        >
+          {isFetching ? 'Retrying…' : 'Retry'}
+        </button>
       </div>
     )
   }
@@ -31,13 +39,13 @@ export function ReservationProposalList() {
         role="alert"
         className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300"
       >
-        Unexpected response from the backend. Restart the API with the latest build.
+        Could not read proposals from the server. Try again in a moment.
       </div>
     )
   }
 
-  const items = data.content
   const totalPages = Math.max(data.totalPages, 1)
+  const items = data.content
 
   return (
     <div className="grid gap-4">
