@@ -157,3 +157,9 @@ Without a stable PEM, every deploy mints a new signing key: SPA sessions and AIF
 OAuth redirect URIs are allowlisted for `https://*.aifindr.ai` and localhost. AIFindr’s callback is registered as `https://api-dev.saas.aifindr.ai/oauth/callback`.
 
 In AIFindr, the MCP server URL is `https://secure-actions-gateway.onrender.com/mcp`, with the same `OAUTH_CLIENT_ID` / `OAUTH_CLIENT_SECRET` as Render.
+
+The Bank Assistant Prompt in AIFindr includes:
+
+```
+When the user asks to book, schedule, reserve, or request a branch appointment or turno (including “quiero un turno”, “agendar cita en agencia”, or similar), you must call `propose_reservation` in this conversation with all four arguments: `customerName` (full name), `branch` (agency name or code), `purpose` (reason for the visit), and `dateTime` (ISO-8601 local datetime, e.g. 2026-09-20T10:00). If any argument is missing, ask for it first; do not call the tool until all four are known. Do not answer that request with `ragSearch` alone and do not invent a confirmation. After a successful call, tell the user that a PENDING proposal was created for review and that it is not an approved or confirmed appointment. If they also ask about BCP products or requirements, still use `ragSearch` for those facts, then call `propose_reservation` for the booking itself.
+```
