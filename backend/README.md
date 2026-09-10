@@ -6,7 +6,7 @@ Java MCP server for Challenge B: a safe-actions gateway. The Bank Assistant agen
 
 I chose this challenge because adding extra capabilities to the agent is the interesting part of the problem: not only answering from the knowledge base, but proposing an action that a human can confirm.
 
-I used branch appointments rather than transfers. In the current AIFindr product model, and in this Bank BCP project in particular, **end users are not authenticated**. The conversation does not carry a proof of who is speaking. Under that constraint a money-movement tool is unsafe. A path such as Charlie causing Alice to send funds to Bob cannot be prevented in the model as it stands: the agent has no reliable binding between the chat participant and an account holder.
+I used branch appointments rather than transfers. In the current AIFindr product model, and in the assigned Bank Assistant project in particular, **end users are not authenticated**. The conversation does not carry a proof of who is speaking. Under that constraint a money-movement tool is unsafe. A path such as Charlie causing Alice to send funds to Bob cannot be prevented in the model as it stands: the agent has no reliable binding between the chat participant and an account holder.
 
 That binding could exist if users signed in first and a token travelled with the conversation. The chat could then know which user is requesting the action and deny access to other people’s data or operations. Today even the operator who reviews proposals cannot tell whether Alice is the person in the chat who asked to pay Bob; they only see the proposal payload.
 
@@ -37,7 +37,7 @@ Production:
 
 **MCP tools** (Bearer token from AIFindr OAuth):
 
-- `propose_reservation` — create a `PENDING` proposal; returns an `id`
+- `propose_reservation` — create a `PENDING` proposal; returns an `id`. Rejects blank fields, strings over the length cap, and `dateTime` that is not ISO-8601 (`400`)
 - `get_reservation_proposal_status` — look up a proposal by `id`
 
 **HTTP API** (SPA JWT, except login and health):
@@ -46,7 +46,7 @@ Production:
 | --- | --- | --- |
 | `GET` | `/health` | Public. `{"status":"ok"}` |
 | `POST` | `/v1/auth/login` | Public. Body `{ "username", "password" }` → `{ "token" }` |
-| `GET` | `/v1/reservation-proposals?page=0&size=10` | Paginated list |
+| `GET` | `/v1/reservation-proposals?page=0&size=10` | Paginated list (`page >= 0`, `size` 1–50) |
 | `PATCH` | `/v1/reservation-proposals/{id}` | Body `{ "status": "APPROVED" \| "REJECTED" }` |
 
 `GET /` is not a home page (Tomcat 404 is normal).
@@ -121,6 +121,8 @@ Tests (H2 in-memory, no Docker):
 ```bash
 ./mvnw test
 ```
+
+The suite covers `ReservationProposalService` (propose, status transitions, validation) and the HTTP/OAuth gates. It does **not** invoke MCP tools over JSON-RPC (`tools/call` on `POST /mcp`). That protocol-level path is out of scope: the tools are thin wrappers over the same service the tests already exercise.
 
 ## Deploying to Render
 
