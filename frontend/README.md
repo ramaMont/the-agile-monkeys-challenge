@@ -1,75 +1,56 @@
-# React + TypeScript + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite UI for reviewing reservation proposals against the MCP gateway.
 
-Currently, two official plugins are available:
+## Local setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Use Node.js **22.23.2** (see `.nvmrc`). Vite needs Node 20.19+ or 22.12+.
 
-## React Compiler
+   ```bash
+   nvm use
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+2. Copy the env file and point the API at the local gateway (port `8080`):
 
-## Expanding the ESLint configuration
+   ```bash
+   cp .env.example .env
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+   `VITE_API_BASE_URL` is required. The default `http://localhost:8080` matches a local backend.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+3. Start the backend from `../backend` (Docker Compose). The SPA will not load proposals without it. See `backend/README.md`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+4. Install and run:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-```
+   Open [http://localhost:5173](http://localhost:5173). Sign in with the gateway admin user from `backend/.env` (`ADMIN_OAUTH_USER` / `ADMIN_OAUTH_PASSWORD`, defaults `user` / `password`).
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Vite already falls back to `index.html` for unknown paths, so client-side routing works locally without extra config.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Other scripts: `npm run build`, `npm run preview`, `npm run lint`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Deploying to Render
 
-```
+Create a **static site** with:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | `frontend` |
+| Build command | `npm ci && npm run build` |
+| Publish directory | `dist` |
+
+Set `VITE_API_BASE_URL` to the public gateway URL (build-time). On the backend, set `CORS_ALLOWED_ORIGIN` to this site’s origin.
+
+This app uses React Router (`BrowserRouter`). On a Render static site, a typed or refreshed URL such as `/login` is requested from the CDN, which looks for a real file and returns **Not Found** unless every path is rewritten to `index.html`.
+
+After creating the static site, open **Redirects/Rewrites** and add:
+
+| Source | Destination | Action |
+| --- | --- | --- |
+| `/*` | `/index.html` | Rewrite |
+
+See [Render: client-side routing](https://render.com/docs/deploy-create-react-app#using-client-side-routing).
